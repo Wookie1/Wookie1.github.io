@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision Dice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .dice-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .die {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px;
+            width: 200px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .die h2 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            min-height: 40px; /* Space for animation */
+        }
+        /* Animation for rolling */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .rolling {
+            animation: spin 0.5s linear infinite;
+            color: #ffc107; /* Yellow for spinning effect */
+        }
+    </style>
+</head>
+<body>
+    <h1>Decision Dice</h1>
+    <p>Click a die to roll it and get a random suggestion!</p>
+    <div class="dice-container">
+        <div class="die" id="activity-die">
+            <h2>Activity</h2>
+            <button onclick="rollDie('activity')">Roll</button>
+            <div class="result" id="activity-result"></div>
+        </div>
+        <div class="die" id="restaurant-die">
+            <h2>Restaurant</h2>
+            <button onclick="rollDie('restaurant')">Roll</button>
+            <div class="result" id="restaurant-result"></div>
+        </div>
+        <div class="die" id="movie-die">
+            <h2>Movie Genre</h2>
+            <button onclick="rollDie('movie')">Roll</button>
+            <div class="result" id="movie-result"></div>
+        </div>
+    </div>
+
+    <script>
+        const options = {
+            activity: [
+                'Do A Puzzle Together', 'Surprise', 'Dance', 'Take a Hike', 'Watch the Sunset',
+                'Go Picnic', 'Go Skiing', 'Watch Movie', 'Go for a Massage', 'Go Shopping',
+                'Go to a Pub', 'Play Board Games'
+            ],
+            restaurant: [
+                'Sushi', 'Wild Card', 'Chinese', 'Burgers', 'Steak', 'Chicken', 'Pasta',
+                'Mexican', 'Pizza', 'Subs', 'Breakfast', 'Seafood'
+            ],
+            movie: [
+                'Western', 'Thriller', 'Sci-Fi', 'Romance', 'Drama', 'Comedy', 'Documentary',
+                'Animation', 'Action', 'Crime', 'War', 'Horror'
+            ]
+        };
+
+        function rollDie(category) {
+            const resultElement = document.getElementById(`${category}-result`);
+            const button = document.querySelector(`#${category}-die button`);
+
+            // Disable button during roll
+            button.disabled = true;
+            resultElement.classList.add('rolling');
+            resultElement.textContent = 'Rolling...';
+
+            // Simulate roll delay (500ms)
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * 12);
+                const selected = options[category][randomIndex];
+                resultElement.textContent = selected;
+                resultElement.classList.remove('rolling');
+                button.disabled = false;
+            }, 500);
+        }
+    </script>
+</body>
+</html>
