@@ -46,54 +46,35 @@
         button:hover {
             background-color: #218838;
         }
-        .dodeca-wrapper {
+        .pentagon-wrapper {
             position: relative;
-            width: 220px;
-            height: 220px;
-            margin: 10px auto;
-            perspective: 2000px; /* Kept high for less distortion */
-        }
-        .dodecahedron {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            transform-style: preserve-3d;
-            transition: transform 0.5s ease-out;
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
         }
         .pentagon {
             position: absolute;
-            width: 170px;
-            height: 170px;
+            width: 100%;
+            height: 100%;
             background: #8B4513; /* Medium brown */
-            color: white;
             clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
+            color: white;
+            font-size: 14px;
             line-height: 1.2;
+            text-align: center;
             padding: 10px;
             box-sizing: border-box;
-            backface-visibility: hidden;
-            left: 50%;
-            top: 50%;
-            margin-left: -85px;
-            margin-top: -85px;
+            transition: transform 0.75s ease-out;
         }
-        .result-text {
-            margin-top: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            min-height: 40px;
+        .rolling .pentagon {
+            animation: spin 0.75s linear infinite; /* Slowed rolling effect */
         }
-        /* Animation for rolling */
         @keyframes spin {
-            0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
-            100% { transform: rotateX(360deg) rotateY(720deg) rotateZ(360deg); }
-        }
-        .rolling {
-            animation: spin 0.75s linear; /* Slowed by 50% */
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -104,26 +85,23 @@
         <div class="die" id="activity-die">
             <h2>Activity</h2>
             <button onclick="rollDie('activity')">Roll</button>
-            <div class="dodeca-wrapper">
-                <div id="activity-dodecahedron" class="dodecahedron"></div>
+            <div class="pentagon-wrapper">
+                <div class="pentagon" id="activity-pentagon"></div>
             </div>
-            <div class="result-text" id="activity-result"></div>
         </div>
         <div class="die" id="restaurant-die">
             <h2>Restaurant</h2>
             <button onclick="rollDie('restaurant')">Roll</button>
-            <div class="dodeca-wrapper">
-                <div id="restaurant-dodecahedron" class="dodecahedron"></div>
+            <div class="pentagon-wrapper">
+                <div class="pentagon" id="restaurant-pentagon"></div>
             </div>
-            <div class="result-text" id="restaurant-result"></div>
         </div>
         <div class="die" id="movie-die">
             <h2>Movie Genre</h2>
             <button onclick="rollDie('movie')">Roll</button>
-            <div class="dodeca-wrapper">
-                <div id="movie-dodecahedron" class="dodecahedron"></div>
+            <div class="pentagon-wrapper">
+                <div class="pentagon" id="movie-pentagon"></div>
             </div>
-            <div class="result-text" id="movie-result"></div>
         </div>
     </div>
 
@@ -144,49 +122,24 @@
             ]
         };
 
-        const scale = 50;
-        const inradius = 1.376;
-        const phi_deg = [-90.0, 180.0, -148.282525588539, -90.0, 180.0, 90.0, 148.282525588539, 90.0, 0.0, -31.717474411461005, 0.0, 31.717474411461005];
-        const theta_deg = [121.717474411461, 148.282525588539, 90.0, 58.282525588539, 31.717474411461, 121.717474411461, 90.0, 58.282525588539, 148.282525588539, 90.0, 31.717474411461, 90.0];
-
-        function initDice() {
-            for (let cat in options) {
-                const dodeca = document.getElementById(`${cat}-dodecahedron`);
-                const texts = options[cat];
-                for (let i = 0; i < 12; i++) {
-                    const face = document.createElement('div');
-                    face.classList.add('pentagon');
-                    face.innerText = texts[i];
-                    const p = phi_deg[i];
-                    const t = theta_deg[i];
-                    face.style.transform = `rotateZ(${-p}deg) rotateY(${p}deg) rotateX(${-t}deg) translateZ(${inradius * scale}px)`;
-                    dodeca.appendChild(face);
-                }
-            }
-        }
-
         function rollDie(category) {
             const button = document.querySelector(`#${category}-die button`);
-            const dodeca = document.getElementById(`${category}-dodecahedron`);
-            const resultElement = document.getElementById(`${category}-result`);
+            const pentagon = document.getElementById(`${category}-pentagon`);
+            const dieElement = document.getElementById(`${category}-die`);
 
             button.disabled = true;
-            dodeca.classList.add('rolling');
-            resultElement.textContent = 'Rolling...';
+            dieElement.classList.add('rolling');
+            pentagon.innerText = ''; // Clear text during roll
 
             setTimeout(() => {
                 const randomIndex = Math.floor(Math.random() * 12);
                 const selected = options[category][randomIndex];
-                const p = phi_deg[randomIndex];
-                const t = theta_deg[randomIndex];
-                dodeca.style.transform = `rotateX(${t}deg) rotateY(${-p}deg) rotateX(-60deg)`; // Added tilt for "top face" effect
-                dodeca.classList.remove('rolling');
-                resultElement.textContent = selected;
+                pentagon.style.transform = 'rotate(0deg)'; // Ensure upright
+                pentagon.innerText = selected;
+                dieElement.classList.remove('rolling');
                 button.disabled = false;
-            }, 750); // Slowed by 50%
+            }, 750); // Slowed by 50% from original 500ms
         }
-
-        initDice();
     </script>
 </body>
 </html>
