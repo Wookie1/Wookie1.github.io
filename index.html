@@ -51,7 +51,7 @@
             width: 200px;
             height: 200px;
             margin: 10px auto;
-            perspective: 1000px;
+            perspective: 2000px; /* Increased for less distortion */
         }
         .dodecahedron {
             width: 100%;
@@ -59,7 +59,7 @@
             position: absolute;
             transform-style: preserve-3d;
             transition: transform 0.5s ease-out;
-            transform: rotateX(-30deg) rotateY(30deg); /* Initial tilt for better view */
+            transform: rotateX(-30deg) rotateY(30deg); /* Initial tilt for 3D view */
         }
         .pentagon {
             position: absolute;
@@ -180,7 +180,7 @@
                 const selected = options[category][randomIndex];
                 const p = phi_deg[randomIndex];
                 const t = theta_deg[randomIndex];
-                dodeca.style.transform = `rotateY(${-p}deg) rotateX(${t}deg)`;
+                dodeca.style.transform = `rotateX(${t}deg) rotateY(${-p}deg)`; // Swapped order for correct alignment
                 dodeca.classList.remove('rolling');
                 resultElement.textContent = selected;
                 button.disabled = false;
