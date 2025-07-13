@@ -48,10 +48,10 @@
         }
         .dodeca-wrapper {
             position: relative;
-            width: 200px;
-            height: 200px;
+            width: 220px;
+            height: 220px;
             margin: 10px auto;
-            perspective: 2000px; /* Increased for less distortion */
+            perspective: 2000px; /* Kept high for less distortion */
         }
         .dodecahedron {
             width: 100%;
@@ -59,27 +59,26 @@
             position: absolute;
             transform-style: preserve-3d;
             transition: transform 0.5s ease-out;
-            transform: rotateX(-30deg) rotateY(30deg); /* Initial tilt for 3D view */
         }
         .pentagon {
             position: absolute;
-            width: 150px;
-            height: 150px;
+            width: 170px;
+            height: 170px;
             background: #8B4513; /* Medium brown */
             color: white;
             clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.2;
             padding: 10px;
             box-sizing: border-box;
             backface-visibility: hidden;
             left: 50%;
             top: 50%;
-            margin-left: -75px;
-            margin-top: -75px;
+            margin-left: -85px;
+            margin-top: -85px;
         }
         .result-text {
             margin-top: 15px;
@@ -94,7 +93,7 @@
             100% { transform: rotateX(360deg) rotateY(720deg) rotateZ(360deg); }
         }
         .rolling {
-            animation: spin 0.5s linear;
+            animation: spin 0.75s linear; /* Slowed by 50% */
         }
     </style>
 </head>
@@ -160,7 +159,7 @@
                     face.innerText = texts[i];
                     const p = phi_deg[i];
                     const t = theta_deg[i];
-                    face.style.transform = `rotateY(${p}deg) rotateX(${-t}deg) translateZ(${inradius * scale}px)`;
+                    face.style.transform = `rotateZ(${-p}deg) rotateY(${p}deg) rotateX(${-t}deg) translateZ(${inradius * scale}px)`;
                     dodeca.appendChild(face);
                 }
             }
@@ -180,11 +179,11 @@
                 const selected = options[category][randomIndex];
                 const p = phi_deg[randomIndex];
                 const t = theta_deg[randomIndex];
-                dodeca.style.transform = `rotateX(${t}deg) rotateY(${-p}deg)`; // Swapped order for correct alignment
+                dodeca.style.transform = `rotateX(${t}deg) rotateY(${-p}deg) rotateX(-60deg)`; // Added tilt for "top face" effect
                 dodeca.classList.remove('rolling');
                 resultElement.textContent = selected;
                 button.disabled = false;
-            }, 500);
+            }, 750); // Slowed by 50%
         }
 
         initDice();
